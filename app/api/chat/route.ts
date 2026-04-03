@@ -1,21 +1,18 @@
 import {
-  consumeStream,
   convertToModelMessages,
   streamText,
-  UIMessage,
 } from 'ai'
 import { createOpenAI } from '@ai-sdk/openai'
 
 export const maxDuration = 60
 
-// Create Featherless provider (OpenAI-compatible)
+// Provider Featherless (Pakai standar OpenAI v3)
 const featherless = createOpenAI({
-  baseURL: 'https://api.featherless.ai/',
+  baseURL: 'https://api.featherless.ai/v1',
   apiKey: process.env.FEATHERLESS_API_KEY,
-  compatibility: 'compatible',
 })
 
-// Map model IDs to actual Featherless model identifiers
+// Map model IDs (Pastiin nama model di kanan sesuai dashboard Featherless)
 const MODEL_MAP: Record<string, string> = {
   'kimi-k2.5': 'moonshotai/Kimi-K2-Instruct',
   'qwen-2.5-coder': 'Qwen/Qwen2.5-Coder-32B-Instruct',
@@ -26,12 +23,12 @@ const MODEL_MAP: Record<string, string> = {
 }
 
 export async function POST(req: Request) {
-  const { messages, model: modelId }: { messages: UIMessage[]; model?: string } = await req.json()
+  const { messages, model: modelId } = await req.json()
 
-  // Get the actual model from the mapping
+  // Ambil nama model asli, default ke Kimi kalau kosong
   const modelName = MODEL_MAP[modelId || 'kimi-k2.5'] || MODEL_MAP['kimi-k2.5']
 
-  const result = streamText({
+  const result = await streamText({
     model: featherless(modelName),
     system: `You are Kii-v0, a highly capable AI assistant created for professionals. You are:
 - Direct and concise in your responses
@@ -39,12 +36,8 @@ export async function POST(req: Request) {
 - Helpful but never sycophantic - you don't start with phrases like "Great question!" or "I'd be happy to help!"
 - You format responses using markdown when appropriate (code blocks, lists, bold, etc.)
 - When showing code, always use proper syntax highlighting with the language specified`,
-    messages: await convertToModelMessages(messages),
-    abortSignal: req.signal,
+    messages: convertToModelMessages(messages),
   })
 
-  return result.toUIMessageStreamResponse({
-    originalMessages: messages,
-    consumeSseStream: consumeStream,
-  })
-}
+  return result.toDataStreamResponse()
+  }
