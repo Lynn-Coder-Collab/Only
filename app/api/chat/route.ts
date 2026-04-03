@@ -10,7 +10,7 @@ export const maxDuration = 60
 
 // Create Featherless provider (OpenAI-compatible)
 const featherless = createOpenAI({
-  baseURL: 'https://api.featherless.ai/v1',
+  baseURL: 'https://api.featherless.ai/',
   apiKey: process.env.FEATHERLESS_API_KEY,
   compatibility: 'compatible',
 })
