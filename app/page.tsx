@@ -101,7 +101,7 @@ export default function Home() {
           ) : (
             <div className="py-4">
               {messages.map((message) => (
-                <ChatMessageItem key={message.id} message={message} />
+                <ChatMessage key={message.id} message={message} />
               ))}
               {isLoading && messages[messages.length - 1]?.role === 'user' && (
                 <div className="flex gap-3 py-6">
