@@ -6,7 +6,7 @@ import { DefaultChatTransport } from 'ai'
 import { Header } from '@/components/header'
 import { ChatInput } from '@/components/chat-input'
 import { models, type Model } from '@/components/model-selector'
-import { ChatMessageItem } from '@/components/chat-message'
+import { ChatMessage } from '@/components/chat-message'
 
 export default function Home() {
   const [selectedModel, setSelectedModel] = useState<Model>(models[0])
