@@ -12,6 +12,7 @@ export const maxDuration = 60
 const featherless = createOpenAI({
   baseURL: 'https://api.featherless.ai/v1',
   apiKey: process.env.FEATHERLESS_API_KEY,
+  compatibility: 'compatible',
 })
 
 // Map model IDs to actual Featherless model identifiers
